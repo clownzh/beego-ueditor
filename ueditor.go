@@ -22,18 +22,15 @@ var filenames=make([]FileItem,0)
 
 func Listdir(path,def string)[]FileItem{
 	fileInfoList,err := ioutil.ReadDir(path+def)
-	//fmt.Println("fileInfoList",len(fileInfoList))
 	if err != nil {
 		fmt.Println("err1",err)
 	}
 	var  name FileItem
 	for _,fileInfo:=range fileInfoList{
 		if fileInfo.IsDir(){
-			//fmt.Println("IsDir",path+fileInfo.Name())
 			Listdir(path,fileInfo.Name())
 			continue
 		}else {
-			//fmt.Println("def",def+fileInfo.Name())
 			if strings.Split(fileInfo.Name(),".")[1] != "mp4"{
 				name.Url=def+"/"+fileInfo.Name()
 				filenames=append(filenames,name)
@@ -48,7 +45,6 @@ func Listdir(path,def string)[]FileItem{
 
 func (u *UeditorController)Action()  {
 	action := u.GetString("action")
-	//fmt.Println(action)
 
 	data:=make(map[string]interface{})
 
@@ -99,7 +95,7 @@ func (u *UeditorController)Action()  {
 				data["title"]=filename
 				data["original"]=filename
 				u.Data["json"]=data
-				//fmt.Println(u.Data["json"])
+				
 				u.ServeJSON()
 			}
 
@@ -121,13 +117,13 @@ func (u *UeditorController)Action()  {
 			uploadDir := time.Now().Format("20060102/")
 
 			err = os.MkdirAll(beego.AppConfig.String("Path")+uploadDir, 777)
-			//fmt.Println("mkdir",err)
+			
 
 			url:= beego.AppConfig.String("Path") + uploadDir + filename
-			//fmt.Println("url",url)
+			
 
 			err=u.SaveToFile("upfile",url)
-			//fmt.Println("err",err)
+			
 
 			if err != nil {
 				data["state"]="FAIL"
